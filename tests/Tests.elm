@@ -3,18 +3,20 @@ module Tests exposing (..)
 import Test exposing (..)
 import Expect
 import String
+import List.Addendum exposing (..)
 
 
 all : Test
 all =
-    describe "A Test Suite"
-        [ test "Addition" <|
-            \() ->
-                Expect.equal (3 + 7) 10
-        , test "String.left" <|
-            \() ->
-                Expect.equal "a" (String.left 1 "abcdefg")
-        , test "This test should fail" <|
-            \() ->
-                Expect.fail "failed as expected!"
+    describe "The List.Addendum module"
+        [ describe "List.fetch/2"
+            [ test "returns value at valid positive index" <|
+                \() -> Expect.equal (Just 5) <| fetch [ 1, 3, 5 ] 2
+            , test "returns value at valid negative index" <|
+                \() -> Expect.equal (Just 5) <| fetch [ 1, 3, 5 ] -1
+            , test "returns Nothing at invalid positive index" <|
+                \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] 3
+            , test "return Nothings at invalid negative index" <|
+                \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] -4
+            ]
         ]
