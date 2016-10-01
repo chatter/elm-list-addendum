@@ -1,0 +1,16 @@
+{
+    "version": "1.0.0",
+    "summary": "Set of additional functions for working with Lists",
+    "repository": "https://github.com/chatter/elm-list-addendum.git",
+    "license": "BSD3",
+    "source-directories": [
+        "src"
+    ],
+    "exposed-modules": [
+        "List.Addendum"
+    ],
+    "dependencies": {
+        "elm-lang/core": "4.0.5 <= v < 5.0.0"
+   },
+    "elm-version": "0.17.1 <= v < 0.18.0"
+}
