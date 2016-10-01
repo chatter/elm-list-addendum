@@ -13,17 +13,6 @@ at list index default =
     Maybe.withDefault default <| fetch list index
 
 
-{-| -}
-fetch : List a -> Int -> Maybe a
-fetch list index =
-    case index < 0 of
-        True ->
-            fetch_list (List.reverse list) <| (-index - 1)
-
-        False ->
-            fetch_list list index
-
-
 {-| Chunks a List into sublists containing `count` elements each, where each new
     chunk starts `step` elements into the List. `step` is optional and, if not
     provided, defaults to `count`. If the final chunk does not have `count`
@@ -54,6 +43,21 @@ chunk list count step leftover =
                 Result.Ok <| chunk' list count step' leftover
 
 
+{-| -}
+fetch : List a -> Int -> Maybe a
+fetch list index =
+    case index < 0 of
+        True ->
+            fetch' (List.reverse list) <| (-index - 1)
+
+        False ->
+            fetch' list index
+
+
+
+-- PRIVATE
+
+
 chunk' : List a -> Int -> Int -> Maybe (List a) -> List (List a)
 chunk' list count step leftover =
     let
@@ -80,8 +84,8 @@ chunk' list count step leftover =
                                 :: (chunk' [] 0 0 Nothing)
 
 
-fetch_list : List a -> Int -> Maybe a
-fetch_list list index =
+fetch' : List a -> Int -> Maybe a
+fetch' list index =
     case list of
         [] ->
             Nothing
@@ -90,4 +94,4 @@ fetch_list list index =
             if index == 0 then
                 Just head
             else
-                fetch_list tail <| index - 1
+                fetch' tail <| index - 1
