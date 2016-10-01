@@ -14,6 +14,7 @@ all =
     describe "The List.Addendum module"
         [ at_tests
         , chunk_tests
+        , chunk_by_tests
         , fetch_tests
         ]
 
@@ -76,6 +77,19 @@ chunk_tests =
                 chunk [ 1, 2, 3, 4, 5, 6 ] 2 Nothing Nothing
                     |> Result.withDefault []
                     |> Expect.equal [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ] ]
+        ]
+
+
+chunk_by_tests =
+    describe "List.Addendum.chunk_by/2"
+        [ test "returns 3 nested lists" <|
+            \() ->
+                chunk_by (\a -> a `rem` 2 == 1) [ 1, 2, 2, 3, 4, 4, 6, 7, 7 ]
+                    |> Expect.equal [ [ 1 ], [ 2, 2 ], [ 3 ], [ 4, 4, 6 ], [ 7, 7 ] ]
+        , test "returns 4 nested lists" <|
+            \() ->
+                chunk_by String.length [ "one", "two", "three", "four", "five", "six" ]
+                    |> Expect.equal [ [ "one", "two" ], [ "three" ], [ "four", "five" ], [ "six" ] ]
         ]
 
 
