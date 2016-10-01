@@ -1,4 +1,9 @@
-module List.Addendum exposing (fetch)
+module List.Addendum exposing (at, fetch)
+
+
+at : List a -> Int -> a -> a
+at list index default =
+    Maybe.withDefault default <| fetch list index
 
 
 fetch : List a -> Int -> Maybe a
