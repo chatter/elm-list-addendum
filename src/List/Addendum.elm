@@ -7,12 +7,13 @@ module List.Addendum
         , dedup
         , dedup_by
         , drop_every
+        , drop_while
         , fetch
         )
 
 {-|
 
-@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, fetch
+@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, fetch
 
 -}
 
@@ -168,6 +169,24 @@ drop_every step list =
                 |> fst
                 |> List.reverse
                 |> Result.Ok
+
+
+{-| Drops elements from the beginning of the List so long as `fun` returns
+    True.
+
+    drop_while (\a -> a < 3) [1, 2, 3, 4, 5] == [3, 4, 5]
+-}
+drop_while : (a -> Bool) -> List a -> List a
+drop_while fun list =
+    case list of
+        [] ->
+            []
+
+        head :: tail ->
+            if fun head then
+                drop_while fun tail
+            else
+                list
 
 
 {-| -}

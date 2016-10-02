@@ -19,7 +19,7 @@ all =
         , dedup_tests
         , dedup_by_tests
         , drop_every_tests
-        , drop_whilte_tests
+        , drop_while_tests
         , fetch_tests
         ]
 
