@@ -16,6 +16,7 @@ all =
         , chunk_tests
         , chunk_by_tests
         , count_tests
+        , dedup_by_tests
         , fetch_tests
         ]
 
@@ -100,6 +101,19 @@ count_tests =
             \() ->
                 count (\a -> a `rem` 2 == 0) [ 1, 2, 3, 4, 5 ]
                     |> Expect.equal 2
+        ]
+
+
+dedup_by_tests =
+    describe "List.Addendum.dedup/2"
+        [ test "returns 4 element list" <|
+            \() ->
+                dedup_by (\a -> a > 2) [ 5, 1, 2, 3, 2, 1 ]
+                    |> Expect.equal [ 5, 1, 3, 2 ]
+        , test "returns a 3 element list" <|
+            \() ->
+                dedup_by (\{ x, y } -> x > y) [ { x = 0, y = 3 }, { x = 2, y = 1 }, { x = 3, y = 2 }, { x = 2, y = 2 }, { x = 1, y = 2 } ]
+                    |> Expect.equal [ { x = 0, y = 3 }, { x = 2, y = 1 }, { x = 2, y = 2 } ]
         ]
 
 
