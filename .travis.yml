@@ -8,3 +8,6 @@ install:
   - pushd tests && elm-package install -y && popd
 script:
   - elm-test
+cache:
+  directories:
+    - tests/elm-stuff/build-artifacts
