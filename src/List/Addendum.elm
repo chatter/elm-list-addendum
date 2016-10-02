@@ -241,11 +241,27 @@ find fun default list =
                 find fun default tail
 
 
-{-|
+{-| Returns the index of the first element for which `fun` return `True`. If no
+    such element is found, returns `Nothing`.
+
+    find_index (\a -> a `rem` 2 == 1) [2, 4, 6] == Nothing
+    find_index (\a -> a `rem` 2 == 1) [2, 3, 4] == Just 1
 -}
 find_index : (a -> Bool) -> List a -> Maybe Int
 find_index fun list =
-    Just 0
+    let
+        find_index' fun idx list =
+            case list of
+                [] ->
+                    Nothing
+
+                head :: tail ->
+                    if fun head then
+                        Just idx
+                    else
+                        find_index' fun (idx + 1) tail
+    in
+        find_index' fun 0 list
 
 
 
