@@ -18,6 +18,7 @@ all =
         , count_tests
         , dedup_tests
         , dedup_by_tests
+        , drop_every_tests
         , fetch_tests
         ]
 
@@ -70,11 +71,11 @@ chunk_tests =
         , test "returns an error when count is negative" <|
             \() ->
                 chunk [ 1, 2, 3, 4 ] -1 (Just 0) Nothing
-                    |> Expect.equal (Result.Err "Count must be a positive integer greater than 0")
+                    |> Expect.equal (Result.Err "Count must be a positive integer greater than 0.")
         , test "returns an error when step is negative" <|
             \() ->
                 chunk [ 1, 2, 3, 4 ] 1 (Just -1) Nothing
-                    |> Expect.equal (Result.Err "Step must be a positive integer greater than 0")
+                    |> Expect.equal (Result.Err "Step must be a positive integer greater than 0.")
         , test "uses count for step when step is Nothing" <|
             \() ->
                 chunk [ 1, 2, 3, 4, 5, 6 ] 2 Nothing Nothing
@@ -124,6 +125,27 @@ dedup_by_tests =
             \() ->
                 dedup_by (\{ x, y } -> x > y) [ { x = 0, y = 3 }, { x = 2, y = 1 }, { x = 3, y = 2 }, { x = 2, y = 2 }, { x = 1, y = 2 } ]
                     |> Expect.equal [ { x = 0, y = 3 }, { x = 2, y = 1 }, { x = 2, y = 2 } ]
+        ]
+
+
+drop_every_tests =
+    describe "List.Addendum.drop_every/2"
+        [ test "returns 5 element list" <|
+            \() ->
+                drop_every 2 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+                    |> Expect.equal (Result.Ok [ 2, 4, 6, 8, 10 ])
+        , test "returns empty list" <|
+            \() ->
+                drop_every 1 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+                    |> Expect.equal (Result.Ok [])
+        , test "returns same list when step is 0" <|
+            \() ->
+                drop_every 0 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+                    |> Expect.equal (Result.Ok [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ])
+        , test "returns an error when step is negative" <|
+            \() ->
+                drop_every -1 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+                    |> Expect.equal (Result.Err "Step must be a positive integer.")
         ]
 
 
