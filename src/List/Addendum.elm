@@ -1,8 +1,8 @@
-module List.Addendum exposing (at, chunk, chunk_by, count, fetch)
+module List.Addendum exposing (at, chunk, chunk_by, count, dedup, dedup_by, fetch)
 
 {-|
 
-@docs at, chunk, chunk_by, count, fetch
+@docs at, chunk, chunk_by, count, dedup, dedup_by, fetch
 
 -}
 
@@ -89,6 +89,46 @@ count fun list =
                 val
     in
         List.foldl acc' 0 list
+
+
+{-| List of elements where consecutive duplicates are collapsed to a single
+    element.
+
+    dedup [1, 2, 3, 3, 2, 1] == [1, 2, 3, 2, 1]
+-}
+dedup : List a -> List a
+dedup list =
+    dedup_by (\a -> a) list
+
+
+{-| List of elements where consecutive duplicates are collapsed to a single
+    element. `fun` is used to create value which is used to determine if two
+    elements are equal.
+
+    dedup_by (\a -> a > 2) [5, 1, 2, 3, 2, 1] == [5, 1, 3, 2]
+    dedup_by (\{x,y} -> x > y) [{x = 0, y = 3}, {x = 2, y = 1}, {x = 3, y = 2}, {x = 2, y = 2}, {x = 1, y = 2}] == [{x = 0, y = 3}, {x = 2, y = 1}, {x = 2, y = 2}]
+-}
+dedup_by : (a -> b) -> List a -> List a
+dedup_by fun list =
+    let
+        acc' v ( l, old ) =
+            let
+                result =
+                    fun v
+            in
+                case old of
+                    Nothing ->
+                        ( v :: l, Just result )
+
+                    Just old' ->
+                        if result == old' then
+                            ( l, old )
+                        else
+                            ( v :: l, Just result )
+    in
+        List.foldl acc' ( [], Nothing ) list
+            |> fst
+            |> List.reverse
 
 
 {-| -}
