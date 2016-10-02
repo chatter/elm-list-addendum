@@ -22,6 +22,9 @@ all =
         , drop_while_tests
         , each_tests
         , fetch_tests
+        , find_tests
+        , find_index_tests
+        , find_value_tests
         ]
 
 
@@ -180,3 +183,57 @@ fetch_tests =
         , test "return Nothings at invalid negative index" <|
             \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] -4
         ]
+
+
+find_tests =
+    describe "List.Addendum.find/3"
+        [ test "returns Nothing when no match found and no default given" <|
+            \() ->
+                find (\a -> a `rem` 2 == 1) Nothing [ 2, 4, 6 ]
+                    |> Expect.equal Nothing
+        , test "returns default when no match found and default given" <|
+            \() ->
+                find (\a -> a `rem` 2 == 1) (Just 0) [ 2, 4, 6 ]
+                    |> Expect.equal (Just 0)
+        , test "returns first matching element from list when found" <|
+            \() ->
+                find (\a -> a `rem` 2 == 1) Nothing [ 2, 3, 4, 5 ]
+                    |> Expect.equal (Just 3)
+        ]
+
+
+find_index_tests =
+    describe "List.Addendum.find_index/2"
+        [ test "returns Nothing when no match found" <|
+            \() ->
+                find_index (\a -> a `rem` 2 == 1) [ 2, 4, 6 ]
+                    |> Expect.equal Nothing
+        , test "returns index of first matching element when found" <|
+            \() ->
+                find_index (\a -> a `rem` 2 == 1) [ 2, 3, 4, 5 ]
+                    |> Expect.equal (Just 1)
+        ]
+
+
+find_value_tests =
+    let
+        fun a =
+            if a `rem` 2 == 1 then
+                Just <| "remainder: " ++ (a |> toString)
+            else
+                Nothing
+    in
+        describe "List.Addendum.find_value_tests/3" <|
+            [ test "returns Nothing when no match found and no default given" <|
+                \() ->
+                    find_value fun Nothing [ 2, 4, 6 ]
+                        |> Expect.equal Nothing
+            , test "returns default when no match is found and default given" <|
+                \() ->
+                    find_value fun Nothing [ 2, 3, 4 ]
+                        |> Expect.equal (Just "remainder: 3")
+            , test "returns value of applying function to first matching element" <|
+                \() ->
+                    find_value fun (Just "no remainder!") [ 2, 4, 6 ]
+                        |> Expect.equal (Just "no remainder!")
+            ]
