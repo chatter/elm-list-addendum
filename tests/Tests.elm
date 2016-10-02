@@ -193,12 +193,12 @@ find_tests =
                     |> Expect.equal Nothing
         , test "returns default when no match found and default given" <|
             \() ->
-                find (\a -> a `rem` 2 == 1) 0 [ 2, 4, 6 ]
-                    |> Expect.equal 0
+                find (\a -> a `rem` 2 == 1) (Just 0) [ 2, 4, 6 ]
+                    |> Expect.equal (Just 0)
         , test "returns first matching element from list when found" <|
             \() ->
                 find (\a -> a `rem` 2 == 1) Nothing [ 2, 3, 4, 5 ]
-                    |> Expect.equal 3
+                    |> Expect.equal (Just 3)
         ]
 
 
@@ -210,8 +210,8 @@ find_index_tests =
                     |> Expect.equal Nothing
         , test "returns index of first matching element when found" <|
             \() ->
-                find_index (\a -> a `rem` 2 == 1) Nothing [ 2, 3, 4, 5 ]
-                    |> Expect.equal 1
+                find_index (\a -> a `rem` 2 == 1) [ 2, 3, 4, 5 ]
+                    |> Expect.equal (Just 1)
         ]
 
 
