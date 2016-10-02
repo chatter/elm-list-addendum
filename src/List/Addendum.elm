@@ -1,8 +1,19 @@
-module List.Addendum exposing (at, chunk, chunk_by, count, dedup, dedup_by, fetch)
+module List.Addendum
+    exposing
+        ( at
+        , chunk
+        , chunk_by
+        , count
+        , dedup
+        , dedup_by
+        , drop_every
+        , drop_while
+        , fetch
+        )
 
 {-|
 
-@docs at, chunk, chunk_by, count, dedup, dedup_by, fetch
+@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, fetch
 
 -}
 
@@ -34,10 +45,10 @@ chunk list count step leftover =
     in
         case ( count > 0, step' > 0 ) of
             ( False, _ ) ->
-                Result.Err "Count must be a positive integer greater than 0"
+                Result.Err "Count must be a positive integer greater than 0."
 
             ( _, False ) ->
-                Result.Err "Step must be a positive integer greater than 0"
+                Result.Err "Step must be a positive integer greater than 0."
 
             ( True, True ) ->
                 Result.Ok <| chunk' list count step' leftover
@@ -129,6 +140,53 @@ dedup_by fun list =
         List.foldl acc' ( [], Nothing ) list
             |> fst
             |> List.reverse
+
+
+{-| List of elements with every `step` element dropped, starting with the first
+    element. If `step` is 0, then no items are dropped. The `step` parameter
+    must be non-negative integer or a `Result.Err` will be returned.
+
+    drop_every 2 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Ok [ 2, 4, 6, 8, 10 ]
+    drop_every 1 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Ok [ ]
+    drop_every 0 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Ok [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+    drop_every -1 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Err "Step must be a positive integer."
+-}
+drop_every : Int -> List a -> Result String (List a)
+drop_every step list =
+    let
+        acc' v ( l, counter ) =
+            if counter == step then
+                ( l, 1 )
+            else
+                ( v :: l, counter + 1 )
+    in
+        if step < 0 then
+            Result.Err "Step must be a positive integer."
+        else if step == 0 then
+            Result.Ok list
+        else
+            List.foldl acc' ( [], step ) list
+                |> fst
+                |> List.reverse
+                |> Result.Ok
+
+
+{-| Drops elements from the beginning of the List so long as `fun` returns
+    True.
+
+    drop_while (\a -> a < 3) [1, 2, 3, 4, 5] == [3, 4, 5]
+-}
+drop_while : (a -> Bool) -> List a -> List a
+drop_while fun list =
+    case list of
+        [] ->
+            []
+
+        head :: tail ->
+            if fun head then
+                drop_while fun tail
+            else
+                list
 
 
 {-| -}
