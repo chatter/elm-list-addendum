@@ -23,6 +23,7 @@ all =
         , each_tests
         , fetch_tests
         , find_tests
+        , find_index_tests
         ]
 
 
@@ -197,4 +198,17 @@ find_tests =
             \() ->
                 find (\a -> a `rem` 2 == 1) Nothing [ 2, 3, 4, 5 ]
                     |> Expect.equal 3
+        ]
+
+
+find_index_tests =
+    describe "List.Addendum.find_index/2"
+        [ test "returns Nothing when no match found" <|
+            \() ->
+                find_index (\a -> a `rem` 2 == 1) [ 2, 4, 6 ]
+                    |> Expect.equal Nothing
+        , test "returns index of first matching element when found" <|
+            \() ->
+                find_index (\a -> a `rem` 2 == 1) Nothing [ 2, 3, 4, 5 ]
+                    |> Expect.equal 1
         ]
