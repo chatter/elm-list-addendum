@@ -15,6 +15,7 @@ all =
         [ at_tests
         , chunk_tests
         , chunk_by_tests
+        , count_tests
         , fetch_tests
         ]
 
@@ -90,6 +91,15 @@ chunk_by_tests =
             \() ->
                 chunk_by String.length [ "one", "two", "three", "four", "five", "six" ]
                     |> Expect.equal [ [ "one", "two" ], [ "three" ], [ "four", "five" ], [ "six" ] ]
+        ]
+
+
+count_tests =
+    describe "List.Addendum.count/2"
+        [ test "returns 2" <|
+            \() ->
+                count (\a -> a `rem` 2 == 0) [ 1, 2, 3, 4, 5 ]
+                    |> Expect.equal 2
         ]
 
 
