@@ -3,6 +3,7 @@ module Tests exposing (..)
 import Test exposing (..)
 import Expect
 import String
+import Dict
 import List.Addendum exposing (..)
 
 
@@ -22,6 +23,7 @@ all =
         , drop_while_tests
         , each_tests
         , fetch_tests
+        , group_by_tests
         ]
 
 
@@ -179,4 +181,17 @@ fetch_tests =
             \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] 3
         , test "return Nothings at invalid negative index" <|
             \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] -4
+        ]
+
+
+group_by_tests =
+    describe "List.Addendum.group_by/2"
+        [ test "returns Dict grouped by String.length" <|
+            \() ->
+                group_by String.length Nothing [ "ant", "buffalo", "cat", "dingo" ]
+                    |> Expect.equal Dict.fromList [ ( 3, [ "ant", "cat" ] ), ( 5, [ "dingo" ] ), ( 7, [ "buffalo" ] ) ]
+        , test "returns Dict group by length returning just first letter" <|
+            \() ->
+                group_by String.length (String.left 1) [ "ant", "buffalo", "cat", "dingo" ]
+                    |> Expect.equal Dict.fromList [ ( 3, [ "a", "c" ] ), ( 5, [ "d" ] ), ( 7, [ "b" ] ) ]
         ]
