@@ -29,13 +29,13 @@ at list index default =
 
 
 {-| Chunks a List into a list of lists containing `count` elements each, where
-    each new chunk starts `step` elements into the List. `step` is optional and,
-    if not provided, defaults to `count`. If the final chunk does not have
-    `count` elements, and `leftover` is `Nothing`, then the last chunk is
-    discarded; however, if `leftover` is not `Nothing` then elements are taken
-    as necessary to make the last chunk `count` elements long. If there are not
-    enough elements in `leftover` then the chunk is still return with less than
-    `count` elements.
+each new chunk starts `step` elements into the List. `step` is optional and,
+if not provided, defaults to `count`. If the final chunk does not have
+`count` elements, and `leftover` is `Nothing`, then the last chunk is
+discarded; however, if `leftover` is not `Nothing` then elements are taken
+as necessary to make the last chunk `count` elements long. If there are not
+enough elements in `leftover` then the chunk is still return with less than
+`count` elements.
 
     chunk [1, 2, 3, 4, 5, 6] 2 Nothing Nothing == [[1, 2], [3, 4], [5, 6]]
     chunk [1, 2, 3, 4, 5, 6] 3 (Just 2) (Just [7, 8]) == [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
@@ -59,7 +59,7 @@ chunk list count step leftover =
 
 
 {-| Splits a List into a list of lists on every element for which `fun` returns
-    a new value.
+a new value.
 
     chunk_by (\a -> a `rem` 2 == 1 ) [1, 2, 2, 3, 4, 4, 6, 7, 7] == [[1], [2, 2], [3], [4, 4, 6], [7, 7]]
     chunk_by String.length [ "one", "two", "three", "four", "five", "six" ] == [["one", "two"], ["three"], ["four", "five"], ["six"]]
@@ -107,7 +107,7 @@ count fun list =
 
 
 {-| List of elements where consecutive duplicates are collapsed to a single
-    element.
+element.
 
     dedup [1, 2, 3, 3, 2, 1] == [1, 2, 3, 2, 1]
 -}
@@ -117,8 +117,8 @@ dedup list =
 
 
 {-| List of elements where consecutive duplicates are collapsed to a single
-    element. `fun` is used to create value which is used to determine if two
-    elements are equal.
+element. `fun` is used to create value which is used to determine if two
+elements are equal.
 
     dedup_by (\a -> a > 2) [5, 1, 2, 3, 2, 1] == [5, 1, 3, 2]
     dedup_by (\{x,y} -> x > y) [{x = 0, y = 3}, {x = 2, y = 1}, {x = 3, y = 2}, {x = 2, y = 2}, {x = 1, y = 2}] == [{x = 0, y = 3}, {x = 2, y = 1}, {x = 2, y = 2}]
@@ -147,8 +147,8 @@ dedup_by fun list =
 
 
 {-| List of elements with every `step` element dropped, starting with the first
-    element. If `step` is 0, then no items are dropped. The `step` parameter
-    must be non-negative integer or a `Result.Err` will be returned.
+element. If `step` is 0, then no items are dropped. The `step` parameter
+must be non-negative integer or a `Result.Err` will be returned.
 
     drop_every 2 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Ok [ 2, 4, 6, 8, 10 ]
     drop_every 1 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Ok [ ]
@@ -176,7 +176,7 @@ drop_every step list =
 
 
 {-| Drops elements from the beginning of the List so long as `fun` returns
-    True.
+True.
 
     drop_while (\a -> a < 3) [1, 2, 3, 4, 5] == [3, 4, 5]
 -}
@@ -223,7 +223,7 @@ fetch list index =
 
 
 {-| Returns the first element for which `fun` returns `True`. If no such element
-    is found, returns `default`.
+is found, returns `default`.
 
     find (\a -> a `rem` 2 == 1) Nothing [2, 4, 6] == Nothing
     find (\a -> a `rem` 2 == 1) (Just 0) [2, 4, 6] == (Just 0)
@@ -243,7 +243,7 @@ find fun default list =
 
 
 {-| Returns the index of the first element for which `fun` return `True`. If no
-    such element is found, returns `Nothing`.
+such element is found, returns `Nothing`.
 
     find_index (\a -> a `rem` 2 == 1) [2, 4, 6] == Nothing
     find_index (\a -> a `rem` 2 == 1) [2, 3, 4] == Just 1
@@ -266,8 +266,8 @@ find_index fun list =
 
 
 {-| Returns the value of the function invocation for the first element for which
-    `fun` does not return `Nothing`. If no such element is found, returns
-    `default`.
+`fun` does not return `Nothing`. If no such element is found, returns
+`default`.
 
     fun a =
         if a `rem` 2 == 1 then
