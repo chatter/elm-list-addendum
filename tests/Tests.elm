@@ -22,6 +22,7 @@ all =
         , drop_while_tests
         , each_tests
         , fetch_tests
+        , into_tests
         ]
 
 
@@ -179,4 +180,13 @@ fetch_tests =
             \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] 3
         , test "return Nothings at invalid negative index" <|
             \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] -4
+        ]
+
+
+into_tests =
+    describe "List.Addendum.into/3"
+        [ test "returns a list appended to supplied list" <|
+            \() -> Expect.equal [ 0, 1, 2 ] <| into Nothing [ 0 ] [ 1, 2 ]
+        , test "returns list appended to supplied list after applying fun" <|
+            \() -> Expect.equal [ 3, 6, 9 ] <| into ((*) 3) [ 3 ] [ 2, 3 ]
         ]
