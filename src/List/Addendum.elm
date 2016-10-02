@@ -10,11 +10,13 @@ module List.Addendum
         , drop_while
         , each
         , fetch
+        , find
+        , find_index
         )
 
 {-|
 
-@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each, fetch
+@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each, fetch, find, find_index
 
 -}
 
@@ -217,6 +219,33 @@ fetch list index =
 
         False ->
             fetch' list index
+
+
+{-| Returns the first element for which `fun` returns `True`. If no such element
+    is found, returns `default`.
+
+    find (\a -> a `rem` 2 == 1) Nothing [2, 4, 6] == Nothing
+    find (\a -> a `rem` 2 == 1) (Just 0) [2, 4, 6] == (Just 0)
+    find (\a -> a `rem` 2 == 1) Nothing [2, 3, 4] == (Just 3)
+-}
+find : (a -> Bool) -> Maybe a -> List a -> Maybe a
+find fun default list =
+    case list of
+        [] ->
+            default
+
+        head :: tail ->
+            if fun head then
+                Just head
+            else
+                find fun default tail
+
+
+{-|
+-}
+find_index : (a -> Bool) -> List a -> Maybe Int
+find_index fun list =
+    Just 0
 
 
 
