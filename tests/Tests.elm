@@ -16,6 +16,7 @@ all =
         , chunk_tests
         , chunk_by_tests
         , count_tests
+        , dedup_tests
         , dedup_by_tests
         , fetch_tests
         ]
@@ -104,8 +105,17 @@ count_tests =
         ]
 
 
+dedup_tests =
+    describe "List.Addendum.dedup/1"
+        [ test "returns a 5 element list" <|
+            \() ->
+                dedup [ 1, 2, 3, 3, 2, 1 ]
+                    |> Expect.equal [ 1, 2, 3, 2, 1 ]
+        ]
+
+
 dedup_by_tests =
-    describe "List.Addendum.dedup/2"
+    describe "List.Addendum.dedup_by/2"
         [ test "returns 4 element list" <|
             \() ->
                 dedup_by (\a -> a > 2) [ 5, 1, 2, 3, 2, 1 ]
