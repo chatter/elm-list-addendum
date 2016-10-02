@@ -19,6 +19,7 @@ all =
         , dedup_tests
         , dedup_by_tests
         , drop_every_tests
+        , drop_whilte_tests
         , fetch_tests
         ]
 
@@ -146,6 +147,15 @@ drop_every_tests =
             \() ->
                 drop_every -1 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
                     |> Expect.equal (Result.Err "Step must be a positive integer.")
+        ]
+
+
+drop_while_tests =
+    describe "List.drop_while/2"
+        [ test "drops first 2 elements" <|
+            \() ->
+                drop_while (\a -> a < 3) [ 1, 2, 3, 4, 5 ]
+                    |> Expect.equal [ 3, 4, 5 ]
         ]
 
 
