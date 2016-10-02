@@ -12,6 +12,7 @@ module List.Addendum
         , fetch
         , find
         , find_index
+        , find_value
         )
 
 {-|
@@ -262,6 +263,35 @@ find_index fun list =
                         find_index' fun (idx + 1) tail
     in
         find_index' fun 0 list
+
+
+{-| Returns the value of the function invocation for the first element for which
+    `fun` does not return `Nothing`. If no such element is found, returns
+    `default`.
+
+    fun a =
+        if a `rem` 2 == 1 then
+            Just <| "remainder: " ++ (a |> toString)
+        else
+            Nothing
+
+    find_value fun Nothing [2, 4, 6] == Nothing
+    find_value fun Nothing [2, 3, 4] == Just "remainder 3"
+    find_value fun Just "no remainder" [2, 4, 6] == Just "no remainder"
+-}
+find_value : (a -> Maybe b) -> Maybe b -> List a -> Maybe b
+find_value fun default list =
+    case list of
+        [] ->
+            default
+
+        head :: tail ->
+            case fun head of
+                Nothing ->
+                    find_value fun default tail
+
+                Just val ->
+                    Just val
 
 
 
