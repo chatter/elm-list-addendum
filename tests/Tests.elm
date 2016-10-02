@@ -22,6 +22,7 @@ all =
         , drop_while_tests
         , each_tests
         , fetch_tests
+        , join_tests
         ]
 
 
@@ -179,4 +180,13 @@ fetch_tests =
             \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] 3
         , test "return Nothings at invalid negative index" <|
             \() -> Expect.equal Nothing <| fetch [ 1, 3, 5 ] -4
+        ]
+
+
+join_tests =
+    describe "List.Addendum.join/2"
+        [ test "returns concatenated string" <|
+            \() -> Expect.equal 123 <| join "" [ 1, 2, 3 ]
+        , test "returns string concatenated with joiner" <|
+            \() -> Expect.equal "1 = 2 = 3" <| join " = " [ 1, 2, 3 ]
         ]
