@@ -1,8 +1,8 @@
-module List.Addendum exposing (at, chunk, chunk_by, fetch)
+module List.Addendum exposing (at, chunk, chunk_by, count, fetch)
 
 {-|
 
-@docs at, chunk, chunk_by, fetch
+@docs at, chunk, chunk_by, count, fetch
 
 -}
 
@@ -46,8 +46,8 @@ chunk list count step leftover =
 {-| Splits a List into a list of lists on every element for which `fun` returns
     a new value.
 
-    chunk_by (\a -> a `rem` 2 == 1 ) [1, 2, 2, 3, 4, 4, 6, 7, 7]
-    chunk_by String.length [ "one", "two", "three", "four", "five", "six" ]
+    chunk_by (\a -> a `rem` 2 == 1 ) [1, 2, 2, 3, 4, 4, 6, 7, 7] == [[1], [2, 2], [3], [4, 4, 6], [7, 7]]
+    chunk_by String.length [ "one", "two", "three", "four", "five", "six" ] == [["one", "two"], ["three"], ["four", "five"], ["six"]]
 -}
 chunk_by : (a -> b) -> List a -> List (List a)
 chunk_by fun list =
@@ -73,6 +73,22 @@ chunk_by fun list =
         List.foldl acc' ( [], Nothing ) list
             |> fst
             |> List.reverse
+
+
+{-| Count of elements in List for which `fun` returns True.
+
+    count (\a -> a `rem` 2 == 0) [1, 2, 3, 4, 5] == 2
+-}
+count : (a -> Bool) -> List a -> Int
+count fun list =
+    let
+        acc' item val =
+            if fun item then
+                val + 1
+            else
+                val
+    in
+        List.foldl acc' 0 list
 
 
 {-| -}
