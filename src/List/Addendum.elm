@@ -8,12 +8,13 @@ module List.Addendum
         , dedup_by
         , drop_every
         , drop_while
+        , each
         , fetch
         )
 
 {-|
 
-@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, fetch
+@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each, fetch
 
 -}
 
@@ -187,6 +188,24 @@ drop_while fun list =
                 drop_while fun tail
             else
                 list
+
+
+{-| Invokes `fun` for each element in List. Always returns `Maybe.Nothing`
+
+    each (\a -> Debug.log  a) ["some", "example"]
+-}
+each : (a -> b) -> List a -> Maybe c
+each fun list =
+    case list of
+        [] ->
+            Nothing
+
+        head :: tail ->
+            let
+                _ =
+                    fun head
+            in
+                each fun tail
 
 
 {-| -}

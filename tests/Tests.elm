@@ -20,6 +20,7 @@ all =
         , dedup_by_tests
         , drop_every_tests
         , drop_while_tests
+        , each_tests
         , fetch_tests
         ]
 
@@ -156,6 +157,15 @@ drop_while_tests =
             \() ->
                 drop_while (\a -> a < 3) [ 1, 2, 3, 4, 5 ]
                     |> Expect.equal [ 3, 4, 5 ]
+        ]
+
+
+each_tests =
+    describe "List.each/2"
+        [ test "runs function for each item in list" <|
+            \() ->
+                each (\a -> Expect.equal a <| identity a) [ 1, 2, 3, 4, 5 ]
+                    |> Expect.equal Maybe.Nothing
         ]
 
 
