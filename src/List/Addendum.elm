@@ -1,8 +1,8 @@
-module List.Addendum exposing (at, chunk, chunk_by, count, dedup_by, fetch)
+module List.Addendum exposing (at, chunk, chunk_by, count, dedup, dedup_by, fetch)
 
 {-|
 
-@docs at, chunk, chunk_by, count, dedup_by, fetch
+@docs at, chunk, chunk_by, count, dedup, dedup_by, fetch
 
 -}
 
@@ -89,6 +89,16 @@ count fun list =
                 val
     in
         List.foldl acc' 0 list
+
+
+{-| List of elements where consecutive duplicates are collapsed to a single
+    element.
+
+    dedup [1, 2, 3, 3, 2, 1] == [1, 2, 3, 2, 1]
+-}
+dedup : List a -> List a
+dedup list =
+    dedup_by (\a -> a) list
 
 
 {-| List of elements where consecutive duplicates are collapsed to a single
