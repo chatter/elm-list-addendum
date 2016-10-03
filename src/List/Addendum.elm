@@ -34,13 +34,15 @@ at list index default =
 
 
 {-| Chunks a List into a list of lists containing `count` elements each, where
-each new chunk starts `step` elements into the List. `step` is optional and,
-if not provided, defaults to `count`. If the final chunk does not have
-`count` elements, and `leftover` is `Nothing`, then the last chunk is
-discarded; however, if `leftover` is not `Nothing` then elements are taken
-as necessary to make the last chunk `count` elements long. If there are not
-enough elements in `leftover` then the chunk is still return with less than
-`count` elements.
+each new chunk starts `step` elements into the List.
+
+`step` is optional and, if not provided, defaults to `count`.
+
+If the final chunk does not have `count` elements, and `leftover` is `Nothing`,
+then the last chunk is discarded; however, if `leftover` is not `Nothing` then
+elements are taken as necessary to make the last chunk `count` elements long. If
+there are not enough elements in `leftover` then the chunk is still returned but
+with less than `count` elements.
 
     chunk [1, 2, 3, 4, 5, 6] 2 Nothing Nothing == [[1, 2], [3, 4], [5, 6]]
     chunk [1, 2, 3, 4, 5, 6] 3 (Just 2) (Just [7, 8]) == [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
@@ -122,8 +124,10 @@ dedup list =
 
 
 {-| List of elements where consecutive duplicates are collapsed to a single
-element. `fun` is used to create value which is used to determine if two
-elements are equal.
+element.
+
+`fun` is used to create a value which is the basis for determining equality of
+the elements.
 
     dedup_by (\a -> a > 2) [5, 1, 2, 3, 2, 1] == [5, 1, 3, 2]
     dedup_by (\{x,y} -> x > y) [{x = 0, y = 3}, {x = 2, y = 1}, {x = 3, y = 2}, {x = 2, y = 2}, {x = 1, y = 2}] == [{x = 0, y = 3}, {x = 2, y = 1}, {x = 2, y = 2}]
@@ -152,8 +156,12 @@ dedup_by fun list =
 
 
 {-| List of elements with every `step` element dropped, starting with the first
-element. If `step` is 0, then no items are dropped. The `step` parameter
-must be non-negative integer or a `Result.Err` will be returned.
+element.
+
+If `step` is 0, then no items are dropped.
+
+The `step` parameter must be a non-negative integer or a `Result.Err` will be
+returned.
 
     drop_every 2 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Ok [ 2, 4, 6, 8, 10 ]
     drop_every 1 [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] == Result.Ok [ ]
@@ -300,9 +308,11 @@ find_value fun default list =
 
 
 {-| Creates a `Dict` where elements of the list are split based on passing the
-value to `key_fun`. The value is also passed to `map_fun` before being added to
-the List of values for the resulting key. If no transformation is desired can
-just use the `identity` function to preserve the value as is.
+value to `key_fun`.
+
+The value is also passed to `map_fun` before being added to the List of values
+for the resulting key. If no transformation is desired use the `identity`
+function to preserve the value as is.
 
     group_by String.length identity [ "ant", "buffalo", "cat", "dingo" ] == Dict.fromList [ ( 3, [ "ant", "cat" ] ), ( 5, [ "dingo" ] ), ( 7, [ "buffalo" ] ) ]
     group_by String.length (String.endsWith "o") [ "ant", "buffalo", "cat", "dingo" ] == Dict.fromList [ ( 3, [ False, False ] ), ( 5, [ True ] ), ( 7, [ True ] ) ]
@@ -323,6 +333,10 @@ group_by key_fun map_fun list =
                 Dict.update (key_fun v) (dct_fun' (map_fun v)) dict
     in
         List.foldl acc' Dict.empty list
+
+
+
+--- PRIVATE
 
 
 chunk' : List a -> Int -> Int -> Maybe (List a) -> List (List a)
