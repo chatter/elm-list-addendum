@@ -188,10 +188,10 @@ group_by_tests =
     describe "List.Addendum.group_by/2"
         [ test "returns Dict grouped by String.length" <|
             \() ->
-                group_by String.length Nothing [ "ant", "buffalo", "cat", "dingo" ]
-                    |> Expect.equal Dict.fromList [ ( 3, [ "ant", "cat" ] ), ( 5, [ "dingo" ] ), ( 7, [ "buffalo" ] ) ]
+                group_by String.length identity [ "ant", "buffalo", "cat", "dingo" ]
+                    |> Expect.equal (Dict.fromList [ ( 3, [ "ant", "cat" ] ), ( 5, [ "dingo" ] ), ( 7, [ "buffalo" ] ) ])
         , test "returns Dict group by length returning just first letter" <|
             \() ->
-                group_by String.length (String.left 1) [ "ant", "buffalo", "cat", "dingo" ]
-                    |> Expect.equal Dict.fromList [ ( 3, [ "a", "c" ] ), ( 5, [ "d" ] ), ( 7, [ "b" ] ) ]
+                group_by String.length (String.endsWith "o") [ "ant", "buffalo", "cat", "dingo" ]
+                    |> Expect.equal (Dict.fromList [ ( 3, [ False, False ] ), ( 5, [ True ] ), ( 7, [ True ] ) ])
         ]
