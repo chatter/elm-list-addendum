@@ -10,13 +10,17 @@ module List.Addendum
         , drop_while
         , each
         , fetch
+        , group_by
         )
 
 {-|
 
-@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each, fetch
+@docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each
+@docs fetch, group_by
 
 -}
+
+import Dict exposing (Dict)
 
 
 {-| -}
@@ -219,8 +223,30 @@ fetch list index =
             fetch' list index
 
 
+{-| Creates a `Dict` where elements of the list are split based on passing the
+value to `key_fun`. The value is also passed to `map_fun` before being added to
+the List of values for the resulting key. If no transformation is desired can
+just use the `identity` function to preserve the value as is.
 
--- PRIVATE
+    group_by String.length identity [ "ant", "buffalo", "cat", "dingo" ] == Dict.fromList [ ( 3, [ "ant", "cat" ] ), ( 5, [ "dingo" ] ), ( 7, [ "buffalo" ] ) ]
+    group_by String.length (String.endsWith "o") [ "ant", "buffalo", "cat", "dingo" ] == Dict.fromList [ ( 3, [ False, False ] ), ( 5, [ True ] ), ( 7, [ True ] ) ]
+-}
+group_by : (a -> comparable) -> (a -> b) -> List a -> Dict comparable (List b)
+group_by key_fun map_fun list =
+    let
+        acc' v dict =
+            let
+                dct_fun' x y =
+                    case y of
+                        Nothing ->
+                            Just [ x ]
+
+                        Just val ->
+                            Just <| List.reverse <| x :: val
+            in
+                Dict.update (key_fun v) (dct_fun' (map_fun v)) dict
+    in
+        List.foldl acc' Dict.empty list
 
 
 chunk' : List a -> Int -> Int -> Maybe (List a) -> List (List a)
