@@ -10,11 +10,13 @@ module List.Addendum
         , drop_while
         , each
         , fetch
+        , join
         )
 
 {-|
 
 @docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each, fetch
+@docs join
 
 -}
 
@@ -217,6 +219,22 @@ fetch list index =
 
         False ->
             fetch' list index
+
+
+{-| Joins the List into a String using `sep`.
+-}
+join : String -> List a -> String
+join sep list =
+    let
+        acc' item val =
+            val ++ sep ++ (item |> toString)
+    in
+        case list of
+            [] ->
+                ""
+
+            head :: tail ->
+                List.foldl acc' (head |> toString) tail
 
 
 
