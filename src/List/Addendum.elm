@@ -15,13 +15,13 @@ module List.Addendum
         , find_value
         , group_by
         , into
+        , join
         )
 
 {-|
 
 @docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each
-@docs fetch, find, find_index, find_value, group_by, into
-
+@docs fetch, find, find_index, find_value, group_by, into, join
 
 -}
 
@@ -349,6 +349,22 @@ into fun oldlist newlist =
 
         head :: tail ->
             into fun (fun head :: oldlist) tail
+
+
+{-| Joins the List into a String using `sep`.
+-}
+join : String -> List a -> String
+join sep list =
+    let
+        acc' item val =
+            val ++ sep ++ (item |> toString)
+    in
+        case list of
+            [] ->
+                ""
+
+            head :: tail ->
+                List.foldl acc' (head |> toString) tail
 
 
 

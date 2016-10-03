@@ -28,6 +28,7 @@ all =
         , find_value_tests
         , group_by_tests
         , into_tests
+        , join_tests
         ]
 
 
@@ -261,4 +262,13 @@ into_tests =
             \() -> Expect.equal [ 0, 1, 2 ] <| into identity [ 0 ] [ 1, 2 ]
         , test "returns list appended to supplied list after applying fun" <|
             \() -> Expect.equal [ 3, 6, 9 ] <| into ((*) 3) [ 3 ] [ 2, 3 ]
+        ]
+
+
+join_tests =
+    describe "List.Addendum.join/2"
+        [ test "returns concatenated string" <|
+            \() -> Expect.equal "123" <| join "" [ 1, 2, 3 ]
+        , test "returns string concatenated with joiner" <|
+            \() -> Expect.equal "1 = 2 = 3" <| join " = " [ 1, 2, 3 ]
         ]
