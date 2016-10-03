@@ -10,6 +10,7 @@ module List.Addendum
         , drop_while
         , each
         , fetch
+        , into
         )
 
 {-|
@@ -217,6 +218,21 @@ fetch list index =
 
         False ->
             fetch' list index
+
+
+{-| Inserts the second list into the first list, transforming the elements via
+`fun` prior to insertion.
+
+  into ((*) 3) [3] [2, 3] == [3, 6, 9]
+-}
+into : (a -> a) -> List a -> List a -> List a
+into fun oldlist newlist =
+    case newlist of
+        [] ->
+            oldlist |> List.reverse
+
+        head :: tail ->
+            into fun (fun head :: oldlist) tail
 
 
 
