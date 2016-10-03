@@ -186,7 +186,7 @@ fetch_tests =
 join_tests =
     describe "List.Addendum.join/2"
         [ test "returns concatenated string" <|
-            \() -> Expect.equal 123 <| join "" [ 1, 2, 3 ]
+            \() -> Expect.equal "123" <| join "" [ 1, 2, 3 ]
         , test "returns string concatenated with joiner" <|
             \() -> Expect.equal "1 = 2 = 3" <| join " = " [ 1, 2, 3 ]
         ]
