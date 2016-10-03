@@ -27,6 +27,7 @@ all =
         , find_index_tests
         , find_value_tests
         , group_by_tests
+        , into_tests
         ]
 
 
@@ -251,4 +252,13 @@ group_by_tests =
             \() ->
                 group_by String.length (String.endsWith "o") [ "ant", "buffalo", "cat", "dingo" ]
                     |> Expect.equal (Dict.fromList [ ( 3, [ False, False ] ), ( 5, [ True ] ), ( 7, [ True ] ) ])
+        ]
+
+
+into_tests =
+    describe "List.Addendum.into/3"
+        [ test "returns a list appended to supplied list" <|
+            \() -> Expect.equal [ 0, 1, 2 ] <| into identity [ 0 ] [ 1, 2 ]
+        , test "returns list appended to supplied list after applying fun" <|
+            \() -> Expect.equal [ 3, 6, 9 ] <| into ((*) 3) [ 3 ] [ 2, 3 ]
         ]

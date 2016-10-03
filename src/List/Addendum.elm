@@ -14,12 +14,13 @@ module List.Addendum
         , find_index
         , find_value
         , group_by
+        , into
         )
 
 {-|
 
 @docs at, chunk, chunk_by, count, dedup, dedup_by, drop_every, drop_while, each
-@docs fetch, find, find_index, find_value, group_by
+@docs fetch, find, find_index, find_value, group_by, into
 
 
 -}
@@ -333,6 +334,21 @@ group_by key_fun map_fun list =
                 Dict.update (key_fun v) (dct_fun' (map_fun v)) dict
     in
         List.foldl acc' Dict.empty list
+
+
+{-| Inserts the second list into the first list, transforming the elements via
+`fun` prior to insertion.
+
+  into ((*) 3) [3] [2, 3] == [3, 6, 9]
+-}
+into : (a -> a) -> List a -> List a -> List a
+into fun oldlist newlist =
+    case newlist of
+        [] ->
+            oldlist |> List.reverse
+
+        head :: tail ->
+            into fun (fun head :: oldlist) tail
 
 
 
